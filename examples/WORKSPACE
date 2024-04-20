@@ -1,4 +1,4 @@
 local_repository(
     name = "rules_mobile_assets",
-    path = "../../",
+    path = "../",
 )

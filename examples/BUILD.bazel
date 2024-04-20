@@ -1,0 +1,6 @@
+load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
+
+ios_assets(
+    name = "ios_asset",
+    resources = "//assets:shared_assets"
+)

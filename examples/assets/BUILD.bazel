@@ -1,0 +1,32 @@
+load("@rules_mobile_assets//mobile_assets:defs.bzl", "shared_assets", "image_resource", "color_resource")
+
+shared_assets(
+    name = "shared_assets",
+    app_icon = "icons/Bazel_logo.svg",
+    images = [":example", "example_2"],
+    icons = ["icons/Bazel_logo_2.svg"],
+    colors = ["example_color"],
+    visibility = ["//visibility:public"]
+)
+
+image_resource(
+    name = "example",
+    base_image = "images/universal.png"
+)
+
+image_resource(
+    name = "example_2",
+    base_image = "images/universal_2.png"
+)
+
+color_resource(
+    name = "example_color",
+    alpha = 1,
+    red = 150,
+    green = 20,
+    blue = 100,
+    dark_alpha = 1,
+    dark_red = 255,
+    dark_green = 255,
+    dark_blue = 255,
+)
