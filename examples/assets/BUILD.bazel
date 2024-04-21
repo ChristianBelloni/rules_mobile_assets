@@ -1,4 +1,4 @@
-load("@rules_mobile_assets//mobile_assets:defs.bzl", "shared_assets", "image_resource", "color_resource")
+load("@rules_mobile_assets//mobile_assets:defs.bzl", "shared_assets", "image_resource", "color_resource", "color_asset", "string_resource", "string_collection")
 
 shared_assets(
     name = "shared_assets",
@@ -6,6 +6,7 @@ shared_assets(
     images = [":example", "example_2"],
     icons = ["icons/Bazel_logo_2.svg"],
     colors = ["example_color"],
+    strings = "locales",
     visibility = ["//visibility:public"]
 )
 
@@ -21,12 +22,36 @@ image_resource(
 
 color_resource(
     name = "example_color",
+    base_color = "example_color_base",
+    dark_theme = "example_color_dark",
+)
+
+color_asset(
+    name = "example_color_base",
     alpha = 1,
     red = 150,
     green = 20,
     blue = 100,
-    dark_alpha = 1,
-    dark_red = 255,
-    dark_green = 255,
-    dark_blue = 255,
+)
+
+color_asset(
+    name = "example_color_dark",
+    alpha = 1,
+    red = 150,
+    green = 20,
+    blue = 100,
+)
+
+string_collection(
+    name = "locales",
+    base_language = "it",
+    localizations = ["example_string"]
+)
+
+string_resource(
+    name = "example_string",
+    values = {
+        "it": "la mia stringa",
+        "en": "My string",
+    }
 )
