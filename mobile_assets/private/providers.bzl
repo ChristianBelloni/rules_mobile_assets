@@ -23,3 +23,13 @@ ColorResourceProvider = provider(doc = "Color resource definition", fields = {
     "base": "Base color",
     "dark": "Dark theme color",
 })
+
+LocalizationProvider = provider(doc = "Localization collection", fields = {
+    "base_language": "Base language",
+    "localizations": "Localizations",
+})
+
+LocalizationResourceProvider = provider(doc = "Localizable string definition", fields = {
+    "key": "Resource key",
+    "values": "Key value pair of language-localization",
+})

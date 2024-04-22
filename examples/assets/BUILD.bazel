@@ -4,7 +4,7 @@ shared_assets(
     name = "shared_assets",
     app_icon = "icons/Bazel_logo.svg",
     images = [":example", "example_2"],
-    icons = ["icons/Bazel_logo_2.svg"],
+    # icons = ["icons/Bazel_logo_2.svg"],
     colors = ["example_color"],
     strings = "locales",
     visibility = ["//visibility:public"]

@@ -1,5 +1,5 @@
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider")
+load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider", "LocalizationResourceProvider", "LocalizationProvider")
 load("@aspect_bazel_lib//lib:strings.bzl", "hex")
 
 def _ios_assets_impl(ctx):
@@ -15,8 +15,10 @@ def _ios_assets_impl(ctx):
 
     colors = _generate_colors(ctx, resources.colors, resource_path)
     
+    strings = _generate_strings(ctx, resources.strings, "Localizations")
+    
     return DefaultInfo(
-        files = depset(images + icon + [root_contents] + colors),
+        files = depset(images + icon + [root_contents] + colors + [strings]),
     )
 
 ios_assets = rule(
@@ -238,14 +240,14 @@ def _generate_color(ctx, color, common_directory):
     name = color.name
 
     _color = color
-    color = _color.base
+    color = _color.base[ColorProvider]
 
     base_alpha = "{}".format(color.alpha)
     base_red = hex(color.red)
     base_green = hex(color.green)
     base_blue = hex(color.blue)
 
-    color = _color.dark
+    color = _color.dark[ColorProvider]
 
     dark_alpha = "{}".format(color.alpha)
     dark_red = hex(color.red)
@@ -265,3 +267,59 @@ def _generate_color(ctx, color, common_directory):
 
     ctx.actions.write(output = contents_json, content = val)
     return [contents_json]
+
+def _generate_strings(ctx, strings, common_directory):
+    strings = strings[LocalizationProvider]
+    localization_format = """{
+    "sourceLanguage" : "{SOURCE}",
+    "strings" : {
+        {LOCALES}
+    },
+    "version" : "1.0"
+}
+    """
+    localizations = []
+    for string in strings.localizations:
+        val = _generate_string(string[LocalizationResourceProvider])
+        localizations.append(val)
+
+    localizations = ",\n".join(localizations)
+    localizations = localization_format.replace("{LOCALES}", localizations).replace("{SOURCE}", strings.base_language)
+    out_locales = ctx.actions.declare_file("%s/Localizable.xcstring" % common_directory)
+    ctx.actions.write(output = out_locales, content = localizations)
+    return out_locales
+
+# "simple_key" : {
+#     "comment" : "This is a comment for translators.",
+#     "extractionState" : "manual",
+#     "localizations" : {
+#         "en" : {
+#             "stringUnit" : {
+#                 "state" : "translated",
+#                 "value" : "Default Value"
+#             }
+#         }
+#     }
+# }
+def _generate_string(string):
+    localizations = []
+
+    for lang, val in string.values.items():
+        local = """
+                "{LANG}" : {
+                    "stringUnit" : {
+                        "state" : "translated",
+                        "value" : "{VAL}"
+                    }
+                }""".replace("{LANG}", lang)
+        local = local.replace("{VAL}", val)
+        localizations.append(local)
+
+    current_format = """"{KEY}" : {
+            "extractionState" : "manual",
+            "localizations" : {{LOCALIZATIONS}
+            }
+        }""".replace("{KEY}", string.key).replace("{LOCALIZATIONS}", ",".join(localizations))
+    
+
+    return current_format
