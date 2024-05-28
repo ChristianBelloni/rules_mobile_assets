@@ -4,6 +4,7 @@ SharedAssetProvider = provider(doc = "Shared assets info", fields = {
     "images": "Images",
     "strings": "Strings",
     "colors": "Colors",
+    "others": "Other assets",
 })
 
 ImageResourceProvider = provider(doc = "Image resource", fields = {

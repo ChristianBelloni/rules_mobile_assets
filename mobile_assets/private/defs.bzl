@@ -18,6 +18,7 @@ shared_assets = rule(
         "images": attr.label_list(allow_files = True, providers= [ImageResourceProvider]),
         "strings": attr.label(),
         "colors": attr.label_list()
+        "other": attr.label_list(allow_files = True)
     },
 )
 
