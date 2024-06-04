@@ -15,14 +15,14 @@ def _ios_assets_impl(ctx):
 
     colors = _generate_colors(ctx, resources.colors, resource_path)
     
-    strings = _generate_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
+    strings = _generate_new_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
     others = []
     if resources.others != None:
         for dep in resources.others:
             others.append(_generate_other(ctx, dep))
     
     return DefaultInfo(
-        files = depset(images + icon + [root_contents] + colors + [strings] + others),
+        files = depset(images + icon + [root_contents] + colors + strings + others),
     )
 
 ios_assets = rule(
@@ -271,6 +271,28 @@ def _generate_color(ctx, color, common_directory):
 
     ctx.actions.write(output = contents_json, content = val)
     return [contents_json]
+
+def _acc_lang(ctx, strings, common_directory, lang):
+    out_file = ctx.actions.declare_file("{}/{}.lproj/Localizable.strings".format(common_directory, lang))
+    format = ""
+    for vals in strings.localizations:
+        vals = vals[LocalizationResourceProvider]
+        val = vals.values[lang]
+        key = vals.key
+        format += "\"{}\"=\"{}\"".format(key, val)
+    ctx.actions.write(output = out_file, content = format)
+    return out_file
+
+def _generate_new_strings(ctx, strings, common_directory):
+    strings = strings[LocalizationProvider]
+    first = strings.localizations[0]
+    first = first[LocalizationResourceProvider]
+    langs = first.values.keys()
+    files = []
+    for lang in langs:
+        files += [_acc_lang(ctx, strings, common_directory, lang)]
+    return files
+
 
 def _generate_strings(ctx, strings, common_directory):
     strings = strings[LocalizationProvider]
