@@ -68,7 +68,7 @@ def _generate_ios_app_icon(ctx, app_icon, common_directory):
 
     universal_icon = ctx.actions.declare_file("%s/universal.png" % base_directory)
     
-    cmd = "rsvg-convert {app_icon} -w 1024 -h 1024 {out}".format(
+    cmd = "rsvg-convert {app_icon} -w 1024 -h 1024 -o {out}".format(
         app_icon = app_icon[DefaultInfo].files.to_list()[0].path, 
         out = universal_icon.path
     )
