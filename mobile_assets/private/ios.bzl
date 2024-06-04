@@ -15,7 +15,7 @@ def _ios_assets_impl(ctx):
 
     colors = _generate_colors(ctx, resources.colors, resource_path)
     
-    strings = _generate_strings(ctx, resources.strings, "Localizations")
+    strings = _generate_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
     others = []
     if resources.others != None:
         for dep in resources.others:
