@@ -7,6 +7,7 @@ def _shared_assets_impl(ctx):
         images = ctx.attr.images,
         strings = ctx.attr.strings,
         colors = ctx.attr.colors,
+        others = ctx.attr.others
     )
 
 
@@ -17,8 +18,8 @@ shared_assets = rule(
         # "icons": attr.label_list(allow_files = True),
         "images": attr.label_list(allow_files = True, providers= [ImageResourceProvider]),
         "strings": attr.label(),
-        "colors": attr.label_list()
-        "other": attr.label_list(allow_files = True)
+        "colors": attr.label_list(),
+        "others": attr.label_list(allow_files = True)
     },
 )
 

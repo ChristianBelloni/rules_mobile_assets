@@ -7,7 +7,8 @@ shared_assets(
     # icons = ["icons/Bazel_logo_2.svg"],
     colors = ["example_color"],
     strings = "locales",
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
+    others = ["images/other.txt"]
 )
 
 image_resource(

@@ -16,9 +16,13 @@ def _ios_assets_impl(ctx):
     colors = _generate_colors(ctx, resources.colors, resource_path)
     
     strings = _generate_strings(ctx, resources.strings, "Localizations")
+    others = []
+    if resources.others != None:
+        for dep in resources.others:
+            others.append(_generate_other(ctx, dep))
     
     return DefaultInfo(
-        files = depset(images + icon + [root_contents] + colors + [strings]),
+        files = depset(images + icon + [root_contents] + colors + [strings] + others),
     )
 
 ios_assets = rule(
@@ -323,3 +327,23 @@ def _generate_string(string):
     
 
     return current_format
+
+def _generate_other(ctx, other):
+    other = other.files.to_list()[0]
+    
+    other_name = other.basename
+
+    other_dest = ctx.actions.declare_file("{}".format(other_name))
+
+    cmd = "cp {other} {other_destination}".format(
+        other = other.path,
+        other_destination = other_dest.path
+    )
+
+    ctx.actions.run_shell(
+        outputs = [other_dest],
+        command = cmd,
+        inputs = [other],
+    )
+
+    return other_dest
