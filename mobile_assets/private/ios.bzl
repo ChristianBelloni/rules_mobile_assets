@@ -279,7 +279,7 @@ def _acc_lang(ctx, strings, common_directory, lang):
         vals = vals[LocalizationResourceProvider]
         val = vals.values[lang]
         key = vals.key
-        format += "\"{}\"=\"{}\"".format(key, val)
+        format += "\"{}\"=\"{}\";".format(key, val)
     ctx.actions.write(output = out_file, content = format)
     return out_file
 
