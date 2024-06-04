@@ -4,7 +4,7 @@ load("@aspect_bazel_lib//lib:strings.bzl", "hex")
 
 def _ios_assets_impl(ctx):
     resources = ctx.attr.resources[SharedAssetProvider]
-    resource_path = "Resources.xcassets"
+    resource_path = "%s/Resources.xcassets" % ctx.attr.name
     root_contents = ctx.actions.declare_file("%s/Contents.json" % resource_path)
 
     ctx.actions.write(output = root_contents, content = EMPTY_CONTENTS)
