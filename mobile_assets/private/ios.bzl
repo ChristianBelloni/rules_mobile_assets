@@ -15,7 +15,7 @@ def _ios_assets_impl(ctx):
 
     colors = _generate_colors(ctx, resources.colors, resource_path)
     
-    strings = _generate_new_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
+    strings = _generate_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
     others = []
     if resources.others != None:
         for dep in resources.others:
@@ -283,7 +283,7 @@ def _acc_lang(ctx, strings, common_directory, lang):
     ctx.actions.write(output = out_file, content = format)
     return out_file
 
-def _generate_new_strings(ctx, strings, common_directory):
+def _generate_strings(ctx, strings, common_directory):
     strings = strings[LocalizationProvider]
     first = strings.localizations[0]
     first = first[LocalizationResourceProvider]
@@ -293,62 +293,6 @@ def _generate_new_strings(ctx, strings, common_directory):
         files += [_acc_lang(ctx, strings, common_directory, lang)]
     return files
 
-
-def _generate_strings(ctx, strings, common_directory):
-    strings = strings[LocalizationProvider]
-    localization_format = """{
-    "sourceLanguage" : "{SOURCE}",
-    "strings" : {
-        {LOCALES}
-    },
-    "version" : "1.0"
-}
-    """
-    localizations = []
-    for string in strings.localizations:
-        val = _generate_string(string[LocalizationResourceProvider])
-        localizations.append(val)
-
-    localizations = ",\n".join(localizations)
-    localizations = localization_format.replace("{LOCALES}", localizations).replace("{SOURCE}", strings.base_language)
-    out_locales = ctx.actions.declare_file("%s/Localizable.xcstring" % common_directory)
-    ctx.actions.write(output = out_locales, content = localizations)
-    return out_locales
-
-# "simple_key" : {
-#     "comment" : "This is a comment for translators.",
-#     "extractionState" : "manual",
-#     "localizations" : {
-#         "en" : {
-#             "stringUnit" : {
-#                 "state" : "translated",
-#                 "value" : "Default Value"
-#             }
-#         }
-#     }
-# }
-def _generate_string(string):
-    localizations = []
-
-    for lang, val in string.values.items():
-        local = """
-                "{LANG}" : {
-                    "stringUnit" : {
-                        "state" : "translated",
-                        "value" : "{VAL}"
-                    }
-                }""".replace("{LANG}", lang)
-        local = local.replace("{VAL}", val)
-        localizations.append(local)
-
-    current_format = """"{KEY}" : {
-            "extractionState" : "manual",
-            "localizations" : {{LOCALIZATIONS}
-            }
-        }""".replace("{KEY}", string.key).replace("{LOCALIZATIONS}", ",".join(localizations))
-    
-
-    return current_format
 
 def _generate_other(ctx, other):
     other = other.files.to_list()[0]
