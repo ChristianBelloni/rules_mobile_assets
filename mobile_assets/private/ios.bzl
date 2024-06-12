@@ -240,6 +240,13 @@ COLOR_CONTENTS = """
 
 """
 
+def _hex(color):
+    str = hex(color).replace("0x", "")
+    if len(str) != 2:
+        return "0x0{}".format(str)
+    else:
+        return "0x:{}".format(str)
+
 def _generate_color(ctx, color, common_directory):
     name = color.name
 
@@ -247,16 +254,16 @@ def _generate_color(ctx, color, common_directory):
     color = _color.base[ColorProvider]
 
     base_alpha = "{}".format(color.alpha)
-    base_red = hex(color.red)
-    base_green = hex(color.green)
-    base_blue = hex(color.blue)
+    base_red = _hex(color.red)
+    base_green = _hex(color.green)
+    base_blue = _hex(color.blue)
 
     color = _color.dark[ColorProvider]
 
     dark_alpha = "{}".format(color.alpha)
-    dark_red = hex(color.red)
-    dark_green = hex(color.green)
-    dark_blue = hex(color.blue)
+    dark_red = _hex(color.red)
+    dark_green = _hex(color.green)
+    dark_blue = _hex(color.blue)
 
     contents_json = ctx.actions.declare_file("{}/{}.colorset/Contents.json".format(common_directory, name))
     
