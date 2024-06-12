@@ -245,7 +245,7 @@ def _hex(color):
     if len(str) != 2:
         return "0x0{}".format(str)
     else:
-        return "0x:{}".format(str)
+        return "0x{}".format(str)
 
 def _generate_color(ctx, color, common_directory):
     name = color.name
