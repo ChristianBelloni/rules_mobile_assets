@@ -116,15 +116,15 @@ APP_ICON_CONTENTS = """
 
 SIZES = {
     "16.png": "16x16",
-    "16x2.png": "16x16",
+    "16x2.png": "32x32",
     "32.png": "32x32",
-    "32x2.png": "32x32",
+    "32x2.png": "64x64",
     "128.png": "128x128",
-    "128x2.png": "128x128",
+    "128x2.png": "256x256",
     "256.png": "256x256",
-    "256x2.png": "256x256",
+    "256x2.png": "512x512",
     "512.png": "512x512",
-    "512x2.png": "512x512"
+    "512x2.png": "1024x1024"
 }
 
 def _generate_macos_app_icon(ctx, app_icon, common_directory):
