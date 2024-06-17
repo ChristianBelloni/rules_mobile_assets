@@ -1,8 +1,14 @@
 load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
+load("@rules_mobile_assets//mobile_assets:macos.bzl", "macos_assets")
 load("@rules_mobile_assets//mobile_assets:android.bzl", "android_assets")
 
 ios_assets(
     name = "ios_asset",
+    resources = "//assets:shared_assets"
+)
+
+macos_assets(
+    name = "macos_asset",
     resources = "//assets:shared_assets"
 )
 
