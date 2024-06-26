@@ -174,8 +174,11 @@ def _generate_color(ctx, color, common_directory):
     base_red = _hex(color.red)
     base_green = _hex(color.green)
     base_blue = _hex(color.blue)
-
-    color = _color.dark[ColorProvider]
+    
+    
+    color = _color.base[ColorProvider]
+    if _color.dark != NoneType:
+        color = _color.dark[ColorProvider]
 
     dark_alpha = "{}".format(color.alpha)
     dark_red = _hex(color.red)
