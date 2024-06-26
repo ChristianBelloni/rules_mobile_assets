@@ -177,7 +177,7 @@ def _generate_color(ctx, color, common_directory):
     
     
     color = _color.base[ColorProvider]
-    if _color.dark != NoneType:
+    if _color.dark != None:
         color = _color.dark[ColorProvider]
 
     dark_alpha = "{}".format(color.alpha)
