@@ -199,16 +199,32 @@ def _generate_color(ctx, color, common_directory):
     ctx.actions.write(output = contents_json, content = val)
     return [contents_json]
 
+
+
+KNOWN_KEYS = [
+    "NSCameraUsageDescription",
+    "NSMicrophoneUsageDescription",
+    "NSPhotoLibraryUsageDescription",
+    "NSAppleMusicUsageDescription",
+]
+
 def _acc_lang(ctx, strings, common_directory, lang):
     out_file = ctx.actions.declare_file("{}/{}.lproj/Localizable.strings".format(common_directory, lang))
+    out_file_plist = ctx.actions.declare_file("{}/{}.lproj/InfoPlist.strings".format(common_directory, lang))
     format = ""
+    format_plist = ""
     for vals in strings.localizations:
         vals = vals[LocalizationResourceProvider]
         val = vals.values[lang]
         key = vals.key
-        format += "\"{}\" = \"{}\";\n".format(key, val)
+        if key in KNOWN_KEYS:
+            format_plist += "\"{}\" = \"{}\";\n".format(key, val)
+        else:
+            format += "\"{}\" = \"{}\";\n".format(key, val)
+
     ctx.actions.write(output = out_file, content = format)
-    return out_file
+    ctx.actions.write(output = out_file_plist, content = format_plist)
+    return [out_file, out_file_plist]
 
 def generate_strings(ctx, strings, common_directory):
     strings = strings[LocalizationProvider]
@@ -217,7 +233,7 @@ def generate_strings(ctx, strings, common_directory):
     langs = first.values.keys()
     files = []
     for lang in langs:
-        files += [_acc_lang(ctx, strings, common_directory, lang)]
+        files += _acc_lang(ctx, strings, common_directory, lang)
     return files
 
 

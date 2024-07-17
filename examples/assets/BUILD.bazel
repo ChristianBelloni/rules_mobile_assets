@@ -46,11 +46,19 @@ color_asset(
 string_collection(
     name = "locales",
     base_language = "it",
-    localizations = ["example_string"]
+    localizations = ["example_string", "NSCameraUsageDescription"]
 )
 
 string_resource(
     name = "example_string",
+    values = {
+        "it": "la mia stringa",
+        "en": "My string",
+    }
+)
+
+string_resource(
+    name = "NSCameraUsageDescription",
     values = {
         "it": "la mia stringa",
         "en": "My string",
