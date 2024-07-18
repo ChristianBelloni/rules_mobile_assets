@@ -1,4 +1,5 @@
 load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
+load("@rules_mobile_assets//mobile_assets:apple.bzl", "additional_plist")
 load("@rules_mobile_assets//mobile_assets:macos.bzl", "macos_assets")
 load("@rules_mobile_assets//mobile_assets:android.bzl", "android_assets")
 
@@ -14,5 +15,10 @@ macos_assets(
 
 android_assets(
     name = "android_asset",
+    resources = "//assets:shared_assets"
+)
+
+additional_plist(
+    name = "new_plist",
     resources = "//assets:shared_assets"
 )

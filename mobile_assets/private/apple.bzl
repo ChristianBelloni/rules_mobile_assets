@@ -256,3 +256,43 @@ def generate_other(ctx, other):
     )
 
     return other_dest
+
+PLIST_TEMPLATE = """
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+{CONTENT}</dict>
+</plist>
+"""
+
+PLIST_KEY_TEMPLATE = """    <key>{KEY}</key>
+    <string>{VALUE}</string>
+"""
+
+def _additional_plist_impl(ctx):
+    resources = ctx.attr.resources[SharedAssetProvider]
+    strings = resources.strings[LocalizationProvider]
+    lang = strings.base_language
+    format = ""
+    for pair in strings.localizations:
+        pair = pair[LocalizationResourceProvider]
+        key = pair.key
+        value = pair.values[lang]
+
+        if key in KNOWN_KEYS:
+            format += PLIST_KEY_TEMPLATE.replace("{KEY}", key).replace("{VALUE}", value)
+
+    out = ctx.actions.declare_file("Info_%s.plist" % ctx.attr.name)
+    format = PLIST_TEMPLATE.replace("{CONTENT}", format)
+    ctx.actions.write(output = out, content = format)
+
+    return DefaultInfo(files = depset([out]))
+
+
+additional_plist = rule(
+    implementation = _additional_plist_impl,
+    attrs = {
+        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider])
+    }
+)
