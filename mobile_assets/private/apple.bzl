@@ -279,6 +279,7 @@ def _additional_plist_impl(ctx):
         pair = pair[LocalizationResourceProvider]
         key = pair.key
         value = pair.values[lang]
+        value = value.replace("&", "&amp;")
 
         if key in KNOWN_KEYS:
             format += PLIST_KEY_TEMPLATE.replace("{KEY}", key).replace("{VALUE}", value)
