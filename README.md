@@ -41,7 +41,7 @@ rules_mobile_assets_setup()
 
 ### Assets definition
 
-BUILD.bazel
+`BUILD.bazel`
 
 ```starlark
 load(
@@ -121,7 +121,7 @@ shared_assets(
 
 ### iOS usage
 
-my_ios_app/BUILD
+`my_ios_app/BUILD`
 
 ```starlark
 load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
@@ -169,7 +169,7 @@ ios_application(
 
 ### Android usage
 
-my_android_app/BUILD
+`my_android_app/BUILD`
 
 ```starlark
 load("@rules_mobile_assets//mobile_assets:android.bzl", "android_assets")
