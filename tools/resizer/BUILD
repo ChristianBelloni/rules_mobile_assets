@@ -10,6 +10,7 @@ exports_files(srcs = [
 rust_binary(
     name = "resizer",
     srcs = glob(["**/*.rs"]),
+    edition = "2021",
     visibility = ["//visibility:public"],
     deps = all_crate_deps(),
 )

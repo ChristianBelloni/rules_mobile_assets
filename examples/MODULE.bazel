@@ -1,9 +1,1 @@
-bazel_dep(name = "rules_apple", version = "3.5.1", repo_name = "build_bazel_rules_apple")
-bazel_dep(name = "aspect_bazel_lib", version = "2.7.0")
-bazel_dep(name = "rules_mobile_assets")
 bazel_dep(name = "apple_support", version = "1.17.0", repo_name = "build_bazel_apple_support")
-
-local_path_override(
-    module_name = "rules_mobile_assets",
-    path = "..",
-)
