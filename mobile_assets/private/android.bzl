@@ -32,18 +32,14 @@ def _generate_app_icons(ctx, app_icon, common_directory):
 def _generate_size(ctx, app_icon, common_directory, size_folder, size):
     icon = ctx.actions.declare_file("{}/mipmap-{}/ic_launcher.webp".format(common_directory, size_folder))
 
-    cmd = "magick {app_icon} -alpha off -resize {size} -background none {out}".format(
-        app_icon = app_icon[DefaultInfo].files.to_list()[0].path,
-        size = size,
-        out = icon.path,
-    )
+    args = ["--svg", app_icon[DefaultInfo].files.to_list()[0].path, "--size", "%s" % size, "--out", icon.path, "--webp"]
 
-    ctx.actions.run_shell(
-        outputs = [icon],
-        command = cmd,
+    ctx.actions.run(
         inputs = app_icon.files,
+        arguments = args,
+        executable = ctx.executable._resizer,
+        outputs = [icon],
         mnemonic = "GenerateIcon",
-        use_default_shell_env = True,
     )
 
     return icon
@@ -111,19 +107,6 @@ def _generate_colors(ctx, colors, common_directory):
 
     return [base_out, dark_out]
 
-# ColorProvider = provider(doc = "Color definition", fields = {
-#     "alpha": "color alpha",
-#     "red": "color red",
-#     "green": "color green",
-#     "blue": "color blue",
-# })
-#
-# ColorResourceProvider = provider(doc = "Color resource definition", fields = {
-#     "name": "Color name",
-#     "base": "Base color",
-#     "dark": "Dark theme color",
-# })
-
 def _generate_color(ctx, color, common_directory):
     name = color.name
     base = color.base[ColorProvider]
@@ -182,5 +165,6 @@ android_assets = rule(
     implementation = _android_assets_impl,
     attrs = {
         "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
+        "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
     },
 )

@@ -42,3 +42,9 @@ alias(
     actual = "@id__resvg-0.43.0//:resvg",
     tags = ["manual"],
 )
+
+alias(
+    name = "webp",
+    actual = "@id__webp-0.3.0//:webp",
+    tags = ["manual"],
+)

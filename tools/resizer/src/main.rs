@@ -1,6 +1,11 @@
-use std::path::PathBuf;
+use std::{
+    fs::File,
+    io::{BufWriter, Read, Write},
+    path::PathBuf,
+};
 
 use clap::Parser;
+use webp::{Encoder, PixelLayout};
 
 fn main() {
     let args = Args::parse();
@@ -12,12 +17,31 @@ fn main() {
     let svg = resvg::usvg::Tree::from_data(&svg_data, &opt).unwrap();
 
     let mut pixmap = resvg::tiny_skia::Pixmap::new(args.size, args.size).unwrap();
+    let current_size = svg.size();
+
+    let transform_x = args.size as f32 / current_size.width();
+    let transform_y = args.size as f32 / current_size.height();
     resvg::render(
         &svg,
-        resvg::tiny_skia::Transform::default(),
+        resvg::tiny_skia::Transform::from_scale(transform_x, transform_y),
         &mut pixmap.as_mut(),
     );
-    pixmap.save_png(&args.out).unwrap();
+
+    if args.webp {
+        let encoder = Encoder::new(
+            pixmap.data(),
+            PixelLayout::Rgba,
+            pixmap.width(),
+            pixmap.height(),
+        );
+        let image = encoder.encode(100.0);
+        let out = File::create(&args.out).unwrap();
+        let mut out = BufWriter::new(out);
+        out.write_all(&image).unwrap();
+        out.flush().unwrap();
+    } else {
+        pixmap.save_png(&args.out).unwrap();
+    }
 }
 
 #[derive(Debug, clap::Parser)]
@@ -31,4 +55,7 @@ struct Args {
     #[clap(long)]
     /// Output size in pixels
     pub size: u32,
+
+    #[clap(long, default_value = "false")]
+    pub webp: bool,
 }

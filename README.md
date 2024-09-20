@@ -10,6 +10,7 @@ Rules to streamline asset management when targeting multiple platforms
 ## Planned features
  - [ ] Custom machine-readable format to define assets
  - [ ] Repository rule to generate assets definition
+ - [ ] Codegen to define swift and kotlin constants
 
 ## Installation
 
@@ -117,16 +118,17 @@ my_ios_app/BUILD
 
 ```
 load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
 ios_assets(
     name = "ios_assets",
-    resources = "//:shared_assets"
+    resources = "//:shared_assets",
 )
 
 ios_application(
     name = "my_application",
+    resources = [:ios_assets],
     ...,
-    resources = [:ios_assets]
 )
 ```
 #### Plist support
@@ -145,6 +147,7 @@ KNOWN_KEYS = [
 
 ```
 load("@rules_mobile_assets//mobile_assets:apple.bzl", "additional_plist")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
 additional_plist(
     name = "localized_info_plist",
@@ -154,5 +157,24 @@ additional_plist(
 ios_application(
     name = "my_application",
     infoplists = ["MyInfo.plist", ":localized_info_plist"]
+)
+```
+
+### Android usage
+
+my_android_app/BUILD
+
+```
+load("@rules_mobile_assets//mobile_assets:android.bzl", "android_assets")
+
+android_assets(
+    name = "android_assets",
+    resources = "//:shared_assets",
+)
+
+android_binary(
+    name = "my_app",
+    resource_files = ":android_assets",
+    ...,
 )
 ```

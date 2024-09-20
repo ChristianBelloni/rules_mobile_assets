@@ -297,6 +297,7 @@ _NORMAL_DEPENDENCIES = {
         _COMMON_CONDITION: {
             "clap": Label("@id__clap-4.5.17//:clap"),
             "resvg": Label("@id__resvg-0.43.0//:resvg"),
+            "webp": Label("@id__webp-0.3.0//:webp"),
         },
     },
 }
@@ -505,6 +506,16 @@ def crate_repositories():
 
     maybe(
         http_archive,
+        name = "id__autocfg-1.3.0",
+        sha256 = "0c4b4d0bd25bd0b74681c0ad21497610ce1b7c91b1022cd21c80c6fbdd9476b0",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/autocfg/1.3.0/download"],
+        strip_prefix = "autocfg-1.3.0",
+        build_file = Label("//3rdparty/crates:BUILD.autocfg-1.3.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "id__base64-0.22.1",
         sha256 = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6",
         type = "tar.gz",
@@ -551,6 +562,16 @@ def crate_repositories():
         urls = ["https://static.crates.io/crates/byteorder-lite/0.1.0/download"],
         strip_prefix = "byteorder-lite-0.1.0",
         build_file = Label("//3rdparty/crates:BUILD.byteorder-lite-0.1.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "id__cc-1.1.21",
+        sha256 = "07b1695e2c7e8fc85310cde85aeaab7e3097f593c91d209d3f9df76c928100f0",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/cc/1.1.21/download"],
+        strip_prefix = "cc-1.1.21",
+        build_file = Label("//3rdparty/crates:BUILD.cc-1.1.21.bazel"),
     )
 
     maybe(
@@ -715,12 +736,32 @@ def crate_repositories():
 
     maybe(
         http_archive,
+        name = "id__glob-0.3.1",
+        sha256 = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/glob/0.3.1/download"],
+        strip_prefix = "glob-0.3.1",
+        build_file = Label("//3rdparty/crates:BUILD.glob-0.3.1.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "id__heck-0.5.0",
         sha256 = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea",
         type = "tar.gz",
         urls = ["https://static.crates.io/crates/heck/0.5.0/download"],
         strip_prefix = "heck-0.5.0",
         build_file = Label("//3rdparty/crates:BUILD.heck-0.5.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "id__image-0.25.2",
+        sha256 = "99314c8a2152b8ddb211f924cdae532d8c5e4c8bb54728e12fff1b0cd5963a10",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/image/0.25.2/download"],
+        strip_prefix = "image-0.25.2",
+        build_file = Label("//3rdparty/crates:BUILD.image-0.25.2.bazel"),
     )
 
     maybe(
@@ -755,6 +796,16 @@ def crate_repositories():
 
     maybe(
         http_archive,
+        name = "id__jobserver-0.1.32",
+        sha256 = "48d1dbcbbeb6a7fec7e059840aa538bd62aaccf972c7346c4d9d2059312853d0",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/jobserver/0.1.32/download"],
+        strip_prefix = "jobserver-0.1.32",
+        build_file = Label("//3rdparty/crates:BUILD.jobserver-0.1.32.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "id__kurbo-0.11.1",
         sha256 = "89234b2cc610a7dd927ebde6b41dd1a5d4214cffaef4cf1fb2195d592f92518f",
         type = "tar.gz",
@@ -781,6 +832,16 @@ def crate_repositories():
         urls = ["https://static.crates.io/crates/libm/0.2.8/download"],
         strip_prefix = "libm-0.2.8",
         build_file = Label("//3rdparty/crates:BUILD.libm-0.2.8.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "id__libwebp-sys-0.9.6",
+        sha256 = "54cd30df7c7165ce74a456e4ca9732c603e8dc5e60784558c1c6dc047f876733",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/libwebp-sys/0.9.6/download"],
+        strip_prefix = "libwebp-sys-0.9.6",
+        build_file = Label("//3rdparty/crates:BUILD.libwebp-sys-0.9.6.bazel"),
     )
 
     maybe(
@@ -821,6 +882,16 @@ def crate_repositories():
         urls = ["https://static.crates.io/crates/miniz_oxide/0.8.0/download"],
         strip_prefix = "miniz_oxide-0.8.0",
         build_file = Label("//3rdparty/crates:BUILD.miniz_oxide-0.8.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "id__num-traits-0.2.19",
+        sha256 = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/num-traits/0.2.19/download"],
+        strip_prefix = "num-traits-0.2.19",
+        build_file = Label("//3rdparty/crates:BUILD.num-traits-0.2.19.bazel"),
     )
 
     maybe(
@@ -911,6 +982,16 @@ def crate_repositories():
         urls = ["https://static.crates.io/crates/rustybuzz/0.18.0/download"],
         strip_prefix = "rustybuzz-0.18.0",
         build_file = Label("//3rdparty/crates:BUILD.rustybuzz-0.18.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "id__shlex-1.3.0",
+        sha256 = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/shlex/1.3.0/download"],
+        strip_prefix = "shlex-1.3.0",
+        build_file = Label("//3rdparty/crates:BUILD.shlex-1.3.0.bazel"),
     )
 
     maybe(
@@ -1155,6 +1236,16 @@ def crate_repositories():
 
     maybe(
         http_archive,
+        name = "id__webp-0.3.0",
+        sha256 = "8f53152f51fb5af0c08484c33d16cca96175881d1f3dec068c23b31a158c2d99",
+        type = "tar.gz",
+        urls = ["https://static.crates.io/crates/webp/0.3.0/download"],
+        strip_prefix = "webp-0.3.0",
+        build_file = Label("//3rdparty/crates:BUILD.webp-0.3.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "id__weezl-0.1.8",
         sha256 = "53a85b86a771b1c87058196170769dd264f66c0782acf1ae6cc51bfd64b39082",
         type = "tar.gz",
@@ -1296,4 +1387,5 @@ def crate_repositories():
     return [
         struct(repo = "id__clap-4.5.17", is_dev_dep = False),
         struct(repo = "id__resvg-0.43.0", is_dev_dep = False),
+        struct(repo = "id__webp-0.3.0", is_dev_dep = False),
     ]
