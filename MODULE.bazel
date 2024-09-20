@@ -13,3 +13,4 @@ deps = use_extension("@rules_mobile_assets//mobile_assets/private:extensions.bzl
 use_repo(deps, "id__clap-4.5.17", "id__resvg-0.43.0", "id__webp-0.3.0")
 
 bazel_dep(name = "apple_support", version = "1.17.0", dev_dependency = True, repo_name = "build_bazel_apple_support")
+bazel_dep(name = "stardoc", version = "0.7.1", dev_dependency = True)

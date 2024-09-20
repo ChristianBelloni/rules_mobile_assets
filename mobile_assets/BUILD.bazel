@@ -1,1 +1,10 @@
+load("@stardoc//stardoc:stardoc.bzl", "stardoc")
+
 package(default_visibility = ["//visibility:public"])
+
+stardoc(
+    name = "docs",
+    out = "docs.md",
+    input = "defs.bzl",
+    deps = ["//mobile_assets/private"],
+)

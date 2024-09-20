@@ -162,9 +162,10 @@ def write_entry(key, val):
     return "<string name=\"{}\">{}</string>\n".format(key, val)
 
 android_assets = rule(
+    doc = "Extracts the necessary metadata from shared_assets and produces the required directory structure for android_{binary, library} resource_files",
     implementation = _android_assets_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
+        "resources": attr.label(doc = "shared_assets target", mandatory = True, providers = [SharedAssetProvider]),
         "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
     },
 )
