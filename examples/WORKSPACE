@@ -1,12 +1,3 @@
-# local_repository(
-#     name = "rules_mobile_assets",
-#     path = "../",
-# )
-
-# load("@rules_mobile_assets//mobile_assets:repositories.bzl", "rules_mobile_assets_dependencies")
-#
-# rules_mobile_assets_dependencies()
-
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(

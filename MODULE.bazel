@@ -1,6 +1,6 @@
 module(
     name = "rules_mobile_assets",
-    version = "0.0.1",
+    version = "0.0.3",
     compatibility_level = 1,
 )
 
@@ -8,10 +8,8 @@ bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.0")
 bazel_dep(name = "rules_rust", version = "0.50.1")
-bazel_dep(name = "stardoc", version = "0.7.1", repo_name = "io_bazel_stardoc")
 
 deps = use_extension("@rules_mobile_assets//mobile_assets/private:extensions.bzl", "i")
 use_repo(deps, "id__clap-4.5.17", "id__resvg-0.43.0", "id__webp-0.3.0")
 
 bazel_dep(name = "apple_support", version = "1.17.0", dev_dependency = True, repo_name = "build_bazel_apple_support")
-bazel_dep(name = "bazel_features", version = "1.17.0", dev_dependency = True)
