@@ -20,6 +20,7 @@ Paste this snippet into your `WORKSPACE.bazel` file:
 
 ```starlark
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "rules_mobile_assets",
     sha256 = "f34926f948ec99ebb1e9b0081db62c0805b4de9a6d8c60abbf402c411e1da5c2",
