@@ -20,6 +20,6 @@ ios_assets(<a href="#ios_assets-name">name</a>, <a href="#ios_assets-resources">
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="ios_assets-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="ios_assets-resources"></a>resources |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="ios_assets-resources"></a>resources |  shared_assets target   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 
 
