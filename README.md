@@ -123,7 +123,7 @@ shared_assets(
 
 my_ios_app/BUILD
 
-```
+```starlark
 load("@rules_mobile_assets//mobile_assets:ios.bzl", "ios_assets")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
@@ -143,7 +143,7 @@ ios_application(
 
 When one of the known keys is defined as a localization you can use additional_plist to localize the final Info.plist file
 
-```
+```starlark
 KNOWN_KEYS = [
     "NSCameraUsageDescription",
     "NSMicrophoneUsageDescription",
@@ -152,7 +152,7 @@ KNOWN_KEYS = [
 ]
 ```
 
-```
+```starlark
 load("@rules_mobile_assets//mobile_assets:apple.bzl", "additional_plist")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
@@ -171,7 +171,7 @@ ios_application(
 
 my_android_app/BUILD
 
-```
+```starlark
 load("@rules_mobile_assets//mobile_assets:android.bzl", "android_assets")
 
 android_assets(
