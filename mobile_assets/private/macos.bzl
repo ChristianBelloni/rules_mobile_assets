@@ -30,7 +30,7 @@ macos_assets = rule(
         "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
         "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
         "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
-        "_magick": attr.label(default = "@imagemagick//:magick", executable = True, cfg = "exec"),
+        "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
     },
 )
 
@@ -144,12 +144,12 @@ def _generate_macos_app_icon(ctx, app_icon, common_directory):
 
         icon = ctx.actions.declare_file("{}/{}".format(base_directory, filename))
 
-        args = [app_icon[DefaultInfo].files.to_list()[0].path, "-alpha", "off", "-resize", size, "-background", "none", icon.path]
-        args = " ".join(args)
+        args = ["--svg", app_icon[DefaultInfo].files.to_list()[0].path, "--size", size, "--out", icon.path]
+
         ctx.actions.run(
             inputs = app_icon.files,
-            arguments = [args],
-            executable = ctx.executable._magick,
+            arguments = args,
+            executable = ctx.executable._resizer,
             outputs = [icon],
             mnemonic = "GenerateIcon",
         )

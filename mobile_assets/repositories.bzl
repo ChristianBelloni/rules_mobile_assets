@@ -1,5 +1,6 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load("//3rdparty/crates:defs.bzl", "crate_repositories")
 
 def rules_mobile_assets_dependencies():
     maybe(
@@ -10,3 +11,4 @@ def rules_mobile_assets_dependencies():
         strip_prefix = "ImageMagick-7.1.1-38",
         urls = ["https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.1-38.zip"],
     )
+    crate_repositories()

@@ -12,4 +12,4 @@ bazel_dep(name = "apple_support", version = "1.17.0", repo_name = "build_bazel_a
 bazel_dep(name = "rules_rust", version = "0.50.1")
 
 deps = use_extension("@rules_mobile_assets//mobile_assets:extensions.bzl", "i")
-use_repo(deps, "imagemagick")
+use_repo(deps, "id__clap-4.5.17", "id__resvg-0.43.0", "imagemagick")

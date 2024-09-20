@@ -30,6 +30,7 @@ ios_assets = rule(
         "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
         "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
         "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
+        "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
     },
 )
 
@@ -69,17 +70,14 @@ def _generate_ios_app_icon(ctx, app_icon, common_directory):
 
     universal_icon = ctx.actions.declare_file("%s/universal.png" % base_directory)
 
-    cmd = "rsvg-convert -w 1024 -h 1024 {app_icon} -b white -o {out}".format(
-        app_icon = app_icon[DefaultInfo].files.to_list()[0].path,
-        out = universal_icon.path,
-    )
+    args = ["--svg", app_icon[DefaultInfo].files.to_list()[0].path, "--size", "1024", "--out", universal_icon.path]
 
-    ctx.actions.run_shell(
-        outputs = [universal_icon],
-        command = cmd,
+    ctx.actions.run(
         inputs = app_icon.files,
+        arguments = args,
+        executable = ctx.executable._resizer,
+        outputs = [universal_icon],
         mnemonic = "GenerateIcon",
-        use_default_shell_env = True,
     )
 
     return [universal_icon, contents_json]
