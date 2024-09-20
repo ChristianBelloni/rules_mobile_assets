@@ -1,24 +1,34 @@
-load("@rules_mobile_assets//mobile_assets:defs.bzl", "shared_assets", "image_resource", "color_resource", "color_asset", "string_resource", "string_collection")
+load(
+    "@rules_mobile_assets//mobile_assets:defs.bzl",
+    "color_asset",
+    "color_resource",
+    "image_resource",
+    "shared_assets",
+    "string_collection",
+    "string_resource",
+)
 
 shared_assets(
     name = "shared_assets",
     app_icon = "icons/Bazel_logo.svg",
-    images = [":example", "example_2"],
-    # icons = ["icons/Bazel_logo_2.svg"],
     colors = ["example_color"],
+    images = [
+        ":example",
+        "example_2",
+    ],
+    others = ["images/other.txt"],
     strings = "locales",
     visibility = ["//visibility:public"],
-    others = ["images/other.txt"]
 )
 
 image_resource(
     name = "example",
-    base_image = "images/universal.png"
+    base_image = "images/universal.png",
 )
 
 image_resource(
     name = "example_2",
-    base_image = "images/universal_2.png"
+    base_image = "images/universal_2.png",
 )
 
 color_resource(
@@ -30,23 +40,26 @@ color_resource(
 color_asset(
     name = "example_color_base",
     alpha = 255,
-    red = 150,
-    green = 20,
     blue = 100,
+    green = 20,
+    red = 150,
 )
 
 color_asset(
     name = "example_color_dark",
     alpha = 1,
-    red = 150,
-    green = 20,
     blue = 100,
+    green = 20,
+    red = 150,
 )
 
 string_collection(
     name = "locales",
     base_language = "it",
-    localizations = ["example_string", "NSCameraUsageDescription"]
+    localizations = [
+        "example_string",
+        "NSCameraUsageDescription",
+    ],
 )
 
 string_resource(
@@ -54,7 +67,7 @@ string_resource(
     values = {
         "it": "la mia stringa",
         "en": "My string",
-    }
+    },
 )
 
 string_resource(
@@ -62,5 +75,5 @@ string_resource(
     values = {
         "it": "la mia stringa",
         "en": "My string",
-    }
+    },
 )
