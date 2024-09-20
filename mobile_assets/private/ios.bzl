@@ -1,4 +1,5 @@
 load(":apple.bzl", "generate_colors", "generate_images", "generate_other", "generate_strings")
+load(":common.bzl", "COMMON_ATTRS")
 load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _ios_assets_impl(ctx):
@@ -27,11 +28,9 @@ def _ios_assets_impl(ctx):
 ios_assets = rule(
     implementation = _ios_assets_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
         "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
         "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
-        "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
-    },
+    } | COMMON_ATTRS,
 )
 
 EMPTY_CONTENTS = """

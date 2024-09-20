@@ -1,4 +1,5 @@
 load("@aspect_bazel_lib//lib:strings.bzl", "hex")
+load(":common.bzl", "COMMON_ATTRS")
 load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _android_assets_impl(ctx):
@@ -164,8 +165,5 @@ def write_entry(key, val):
 android_assets = rule(
     doc = "Extracts the necessary metadata from shared_assets and produces the required directory structure for android_{binary, library} resource_files",
     implementation = _android_assets_impl,
-    attrs = {
-        "resources": attr.label(doc = "shared_assets target", mandatory = True, providers = [SharedAssetProvider]),
-        "_resizer": attr.label(default = "@rules_mobile_assets//tools/resizer", executable = True, cfg = "exec"),
-    },
+    attrs = COMMON_ATTRS,
 )

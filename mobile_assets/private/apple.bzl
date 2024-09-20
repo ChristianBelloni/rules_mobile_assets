@@ -1,4 +1,5 @@
 load("@aspect_bazel_lib//lib:strings.bzl", "hex")
+load(":common.bzl", "COMMON_ATTRS")
 load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def generate_images(ctx, images, common_directory):
