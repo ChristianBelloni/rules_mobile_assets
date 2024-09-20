@@ -42,8 +42,7 @@ rules_mobile_assets_setup()
 
 BUILD.bazel
 
-```
-
+```starlark
 load(
     "@rules_mobile_assets//mobile_assets:defs.bzl",
     "color_asset",
