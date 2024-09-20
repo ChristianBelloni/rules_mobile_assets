@@ -36,8 +36,11 @@ http_archive(
 
 load("@rules_mobile_assets//mobile_assets:repositories.bzl", "rules_mobile_assets_dependencies")
 
-
 rules_mobile_assets_dependencies()
+
+load("@rules_mobile_assets//mobile_assets:setup.bzl", "rules_mobile_assets_setup")
+
+rules_mobile_assets_setup()
 EOF
 
 echo "\`\`\`" 
