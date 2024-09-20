@@ -14,19 +14,26 @@ Rules to streamline asset management when targeting multiple platforms
 
 ## Installation
 
-WORKSPACE
-```
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+### Using WORKSPACE
 
+Paste this snippet into your `WORKSPACE.bazel` file:
+
+```starlark
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "rules_mobile_assets",
-    sha256 = "TODO",
-    urls = ["TODO"]
+    sha256 = "f34926f948ec99ebb1e9b0081db62c0805b4de9a6d8c60abbf402c411e1da5c2",
+    strip_prefix = "rules_mobile_assets-0.0.2",
+    url = "https://github.com/ChristianBelloni/rules_mobile_assets/releases/download/0.0.2/rules_mobile_assets-0.0.2.tar.gz",
 )
 
 load("@rules_mobile_assets//mobile_assets:repositories.bzl", "rules_mobile_assets_dependencies")
 
 rules_mobile_assets_dependencies()
+
+load("@rules_mobile_assets//mobile_assets:setup.bzl", "rules_mobile_assets_setup")
+
+rules_mobile_assets_setup()
 ```
 
 ## Usage
