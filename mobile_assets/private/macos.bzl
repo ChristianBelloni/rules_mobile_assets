@@ -1,7 +1,5 @@
-
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider", "LocalizationResourceProvider", "LocalizationProvider")
-load(":apple.bzl", "generate_images", "generate_colors", "generate_strings", "generate_other")
+load(":apple.bzl", "generate_colors", "generate_images", "generate_other", "generate_strings")
+load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _macos_assets_impl(ctx):
     resources = ctx.attr.resources[SharedAssetProvider]
@@ -15,13 +13,13 @@ def _macos_assets_impl(ctx):
     images = generate_images(ctx, resources.images, resource_path)
 
     colors = generate_colors(ctx, resources.colors, resource_path)
-    
+
     strings = generate_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
     others = []
     if resources.others != None:
         for dep in resources.others:
             others.append(generate_other(ctx, dep))
-    
+
     return DefaultInfo(
         files = depset(images + icon + [root_contents] + colors + strings + others),
     )
@@ -29,7 +27,10 @@ def _macos_assets_impl(ctx):
 macos_assets = rule(
     implementation = _macos_assets_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider])
+        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
+        "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
+        "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
+        "_magick": attr.label(default = "@imagemagick//:magick", executable = True, cfg = "exec"),
     },
 )
 
@@ -124,7 +125,7 @@ SIZES = {
     "256.png": "256x256",
     "256x2.png": "512x512",
     "512.png": "512x512",
-    "512x2.png": "1024x1024"
+    "512x2.png": "1024x1024",
 }
 
 def _generate_macos_app_icon(ctx, app_icon, common_directory):
@@ -136,29 +137,30 @@ def _generate_macos_app_icon(ctx, app_icon, common_directory):
 
     icons = []
     icons.append(contents_json)
-    
+
     for f in SIZES:
         filename = f
         size = SIZES[f].split("x")[0]
 
-
         icon = ctx.actions.declare_file("{}/{}".format(base_directory, filename))
-        
-        cmd = "magick {app_icon} -alpha off -resize {size} -background none {out}".format(
-            app_icon = app_icon[DefaultInfo].files.to_list()[0].path, 
-            size = size,
-            out = icon.path
+
+        args = [app_icon[DefaultInfo].files.to_list()[0].path, "-alpha", "off", "-resize", size, "-background", "none", icon.path]
+        args = " ".join(args)
+        ctx.actions.run(
+            inputs = app_icon.files,
+            arguments = [args],
+            executable = ctx.executable._magick,
+            outputs = [icon],
+            mnemonic = "GenerateIcon",
         )
 
-        ctx.actions.run_shell(
-            outputs = [icon], 
-            command = cmd, 
-            inputs = app_icon.files,
-            mnemonic = "GenerateIcon",
-            use_default_shell_env = True,
-        )
+        # ctx.actions.run_shell(
+        #     outputs = [icon],
+        #     command = cmd,
+        #     inputs = app_icon.files,
+        #     mnemonic = "GenerateIcon",
+        #     use_default_shell_env = True,
+        # )
         icons.append(icon)
 
     return icons
-
-

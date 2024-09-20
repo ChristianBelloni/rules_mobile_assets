@@ -1,18 +1,18 @@
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider", "LocalizationResourceProvider", "LocalizationProvider")
 load("@aspect_bazel_lib//lib:strings.bzl", "hex")
+load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _android_assets_impl(ctx):
     resources = ctx.attr.resources[SharedAssetProvider]
-    
+
     base_path = "%s/res" % ctx.attr.name
 
     strings = _generate_strings(ctx, resources.strings, base_path)
     colors = _generate_colors(ctx, resources.colors, base_path)
     images = _generate_images(ctx, resources.images, base_path)
     icons = _generate_app_icons(ctx, resources.app_icon, base_path)
-    
+
     return DefaultInfo(
-        files = depset(direct = strings + colors + images + icons)
+        files = depset(direct = strings + colors + images + icons),
     )
 
 SIZES = {
@@ -29,19 +29,18 @@ def _generate_app_icons(ctx, app_icon, common_directory):
         ret.append(_generate_size(ctx, app_icon, common_directory, f, SIZES[f]))
     return ret
 
-
 def _generate_size(ctx, app_icon, common_directory, size_folder, size):
     icon = ctx.actions.declare_file("{}/mipmap-{}/ic_launcher.webp".format(common_directory, size_folder))
-    
+
     cmd = "magick {app_icon} -alpha off -resize {size} -background none {out}".format(
-        app_icon = app_icon[DefaultInfo].files.to_list()[0].path, 
+        app_icon = app_icon[DefaultInfo].files.to_list()[0].path,
         size = size,
-        out = icon.path
+        out = icon.path,
     )
 
     ctx.actions.run_shell(
-        outputs = [icon], 
-        command = cmd, 
+        outputs = [icon],
+        command = cmd,
         inputs = app_icon.files,
         mnemonic = "GenerateIcon",
         use_default_shell_env = True,
@@ -62,15 +61,14 @@ def _generate_image(ctx, image, common_directory):
     dark_image = base_image
     if image.dark_theme != None:
         dark_image = image.dark_theme[DefaultInfo].files.to_list()[0]
-    
-    base_image_name = base_image.basename.split(".")[0]
 
+    base_image_name = base_image.basename.split(".")[0]
 
     base_image_dest = ctx.actions.declare_file("{}/drawable/{}.png".format(common_directory, base_image_name))
 
     cmd = "cp {image} {image_destination}".format(
         image = base_image.path,
-        image_destination = base_image_dest.path
+        image_destination = base_image_dest.path,
     )
 
     ctx.actions.run_shell(
@@ -91,8 +89,6 @@ def _generate_image(ctx, image, common_directory):
         command = cmd,
         inputs = [dark_image],
     )
-
-    
 
     return [base_image_dest, dark_image_dest]
 
@@ -121,7 +117,7 @@ def _generate_colors(ctx, colors, common_directory):
 #     "green": "color green",
 #     "blue": "color blue",
 # })
-# 
+#
 # ColorResourceProvider = provider(doc = "Color resource definition", fields = {
 #     "name": "Color name",
 #     "base": "Base color",
@@ -132,15 +128,14 @@ def _generate_color(ctx, color, common_directory):
     name = color.name
     base = color.base[ColorProvider]
     dark = color.dark[ColorProvider]
-    
+
     base_format = "<color name=\"{}\">#{}</color>\n".format(name, _rgb_to_hex(base))
     dark_format = "<color name=\"{}\">#{}</color>\n".format(name, _rgb_to_hex(dark))
 
     return (base_format, dark_format)
 
 def _rgb_to_hex(color):
-    return "{}{}{}{}".format(_hex(color.alpha),_hex(color.red),_hex(color.green),_hex(color.blue)).replace("0x", "")
-
+    return "{}{}{}{}".format(_hex(color.alpha), _hex(color.red), _hex(color.green), _hex(color.blue)).replace("0x", "")
 
 def _hex(val):
     val = hex(val).replace("0x", "")
@@ -186,6 +181,6 @@ def write_entry(key, val):
 android_assets = rule(
     implementation = _android_assets_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider])
+        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
     },
 )

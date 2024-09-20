@@ -1,5 +1,5 @@
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider", "LocalizationResourceProvider", "LocalizationProvider")
 load("@aspect_bazel_lib//lib:strings.bzl", "hex")
+load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def generate_images(ctx, images, common_directory):
     ret = []
@@ -9,68 +9,12 @@ def generate_images(ctx, images, common_directory):
             ret.append(v)
     return ret
 
-IMAGE_CONTENTS = """
-{
-  "images" : [
-    {
-      "filename" : "base.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "dark.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "idiom" : "universal",
-      "scale" : "3x"
-    }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
-}
-
-"""
-
 def _generate_image(ctx, image, common_directory):
     base_image = image.base_image[DefaultInfo].files.to_list()[0]
     dark_image = base_image
     if image.dark_theme != None:
         dark_image = image.dark_theme[DefaultInfo].files.to_list()[0]
-    
+
     base_image_name = base_image.basename.split(".")[0]
 
     resource_path = "{}/{}.imageset".format(common_directory, base_image_name)
@@ -79,7 +23,7 @@ def _generate_image(ctx, image, common_directory):
 
     cmd = "cp {image} {image_destination}".format(
         image = base_image.path,
-        image_destination = base_image_dest.path
+        image_destination = base_image_dest.path,
     )
 
     ctx.actions.run_shell(
@@ -102,10 +46,14 @@ def _generate_image(ctx, image, common_directory):
     )
 
     contents_json = ctx.actions.declare_file("{}/Contents.json".format(resource_path))
-    ctx.actions.write(output = contents_json, content = IMAGE_CONTENTS)
+    ctx.actions.run_shell(
+        inputs = [ctx.file._apple_image_template],
+        command = "cp {} {}".format(ctx.file._apple_image_template.path, contents_json.path),
+        outputs = [contents_json],
+    )
 
     return [base_image_dest, dark_image_dest, contents_json]
-    
+
 def generate_colors(ctx, colors, common_directory):
     ret = []
     for color in colors:
@@ -113,7 +61,6 @@ def generate_colors(ctx, colors, common_directory):
         for v in values:
             ret.append(v)
     return ret
-
 
 COLOR_CONTENTS = """
 {
@@ -174,8 +121,7 @@ def _generate_color(ctx, color, common_directory):
     base_red = _hex(color.red)
     base_green = _hex(color.green)
     base_blue = _hex(color.blue)
-    
-    
+
     color = _color.base[ColorProvider]
     if _color.dark != None:
         color = _color.dark[ColorProvider]
@@ -186,20 +132,23 @@ def _generate_color(ctx, color, common_directory):
     dark_blue = _hex(color.blue)
 
     contents_json = ctx.actions.declare_file("{}/{}.colorset/Contents.json".format(common_directory, name))
-    
-    val = COLOR_CONTENTS.replace("{ALPHA}", base_alpha)
-    val = val.replace("{RED}", base_red)
-    val = val.replace("{GREEN}", base_green)
-    val = val.replace("{BLUE}", base_blue)
-    val = val.replace("{D_ALPHA}", dark_alpha)
-    val = val.replace("{D_RED}", dark_red)
-    val = val.replace("{D_GREEN}", dark_green)
-    val = val.replace("{D_BLUE}", dark_blue)
 
-    ctx.actions.write(output = contents_json, content = val)
+    ctx.actions.expand_template(
+        template = ctx.file._apple_color_template,
+        output = contents_json,
+        substitutions = {
+            "{ALPHA}": base_alpha,
+            "{RED}": base_red,
+            "{GREEN}": base_green,
+            "{BLUE}": base_blue,
+            "{D_ALPHA}": dark_alpha,
+            "{D_RED}": dark_red,
+            "{D_GREEN}": dark_green,
+            "{D_BLUE}": dark_blue,
+        },
+    )
+
     return [contents_json]
-
-
 
 KNOWN_KEYS = [
     "NSCameraUsageDescription",
@@ -236,17 +185,16 @@ def generate_strings(ctx, strings, common_directory):
         files += _acc_lang(ctx, strings, common_directory, lang)
     return files
 
-
 def generate_other(ctx, other):
     other = other.files.to_list()[0]
-    
+
     other_name = other.basename
 
     other_dest = ctx.actions.declare_file("{}".format(other_name))
 
     cmd = "cp {other} {other_destination}".format(
         other = other.path,
-        other_destination = other_dest.path
+        other_destination = other_dest.path,
     )
 
     ctx.actions.run_shell(
@@ -290,10 +238,9 @@ def _additional_plist_impl(ctx):
 
     return DefaultInfo(files = depset([out]))
 
-
 additional_plist = rule(
     implementation = _additional_plist_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider])
-    }
+        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
+    },
 )

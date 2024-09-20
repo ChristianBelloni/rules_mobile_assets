@@ -9,7 +9,7 @@ SharedAssetProvider = provider(doc = "Shared assets info", fields = {
 
 ImageResourceProvider = provider(doc = "Image resource", fields = {
     "base_image": "Base image",
-    "dark_theme": "Dark theme image"
+    "dark_theme": "Dark theme image",
 })
 
 ColorProvider = provider(doc = "Color definition", fields = {

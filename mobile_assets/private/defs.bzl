@@ -1,4 +1,4 @@
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorProvider", "ColorResourceProvider", "LocalizationResourceProvider", "LocalizationProvider")
+load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _shared_assets_impl(ctx):
     return SharedAssetProvider(
@@ -7,26 +7,24 @@ def _shared_assets_impl(ctx):
         images = ctx.attr.images,
         strings = ctx.attr.strings,
         colors = ctx.attr.colors,
-        others = ctx.attr.others
+        others = ctx.attr.others,
     )
-
 
 shared_assets = rule(
     implementation = _shared_assets_impl,
     attrs = {
         "app_icon": attr.label(allow_single_file = True, mandatory = True),
-        # "icons": attr.label_list(allow_files = True),
-        "images": attr.label_list(allow_files = True, providers= [ImageResourceProvider]),
+        "images": attr.label_list(allow_files = True, providers = [ImageResourceProvider]),
         "strings": attr.label(),
         "colors": attr.label_list(),
-        "others": attr.label_list(allow_files = True)
+        "others": attr.label_list(allow_files = True),
     },
 )
 
 def _image_resource_impl(ctx):
     return ImageResourceProvider(
         base_image = ctx.attr.base_image,
-        dark_theme = ctx.attr.dark_theme
+        dark_theme = ctx.attr.dark_theme,
     )
 
 image_resource = rule(
@@ -39,10 +37,10 @@ image_resource = rule(
 
 def _color_asset_impl(ctx):
     return ColorProvider(
-            alpha = ctx.attr.alpha,
-            red = ctx.attr.red,
-            green = ctx.attr.green,
-            blue = ctx.attr.blue,
+        alpha = ctx.attr.alpha,
+        red = ctx.attr.red,
+        green = ctx.attr.green,
+        blue = ctx.attr.blue,
     )
 
 color_asset = rule(
@@ -52,7 +50,7 @@ color_asset = rule(
         "red": attr.int(mandatory = True),
         "green": attr.int(mandatory = True),
         "blue": attr.int(mandatory = True),
-    }
+    },
 )
 
 def _color_resource_impl(ctx):
@@ -66,27 +64,27 @@ color_resource = rule(
     implementation = _color_resource_impl,
     attrs = {
         "base_color": attr.label(mandatory = True),
-        "dark_theme": attr.label()
+        "dark_theme": attr.label(),
     },
 )
 
 def _string_resource(ctx):
     return LocalizationResourceProvider(
         key = ctx.attr.name,
-        values = ctx.attr.values
+        values = ctx.attr.values,
     )
 
 string_resource = rule(
     implementation = _string_resource,
     attrs = {
-        "values": attr.string_dict(mandatory = True)
-    }
+        "values": attr.string_dict(mandatory = True),
+    },
 )
 
 def _string_collection_impl(ctx):
     return LocalizationProvider(
         base_language = ctx.attr.base_language,
-        localizations = ctx.attr.localizations
+        localizations = ctx.attr.localizations,
     )
 
 string_collection = rule(
@@ -94,5 +92,5 @@ string_collection = rule(
     attrs = {
         "base_language": attr.string(default = "en"),
         "localizations": attr.label_list(),
-    }
+    },
 )

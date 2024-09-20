@@ -1,6 +1,5 @@
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
-load(":providers.bzl", "SharedAssetProvider", "ImageResourceProvider", "ColorResourceProvider", "ColorProvider", "LocalizationResourceProvider", "LocalizationProvider")
-load(":apple.bzl", "generate_images", "generate_colors", "generate_strings", "generate_other")
+load(":apple.bzl", "generate_colors", "generate_images", "generate_other", "generate_strings")
+load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceProvider", "LocalizationProvider", "LocalizationResourceProvider", "SharedAssetProvider")
 
 def _ios_assets_impl(ctx):
     resources = ctx.attr.resources[SharedAssetProvider]
@@ -14,13 +13,13 @@ def _ios_assets_impl(ctx):
     images = generate_images(ctx, resources.images, resource_path)
 
     colors = generate_colors(ctx, resources.colors, resource_path)
-    
+
     strings = generate_strings(ctx, resources.strings, "%s/Localizations" % ctx.attr.name)
     others = []
     if resources.others != None:
         for dep in resources.others:
             others.append(generate_other(ctx, dep))
-    
+
     return DefaultInfo(
         files = depset(images + icon + [root_contents] + colors + strings + others),
     )
@@ -28,7 +27,9 @@ def _ios_assets_impl(ctx):
 ios_assets = rule(
     implementation = _ios_assets_impl,
     attrs = {
-        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider])
+        "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
+        "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
+        "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
     },
 )
 
@@ -67,21 +68,18 @@ def _generate_ios_app_icon(ctx, app_icon, common_directory):
     ctx.actions.write(output = contents_json, content = APP_ICON_CONTENTS)
 
     universal_icon = ctx.actions.declare_file("%s/universal.png" % base_directory)
-    
+
     cmd = "rsvg-convert -w 1024 -h 1024 {app_icon} -b white -o {out}".format(
-        app_icon = app_icon[DefaultInfo].files.to_list()[0].path, 
-        out = universal_icon.path
+        app_icon = app_icon[DefaultInfo].files.to_list()[0].path,
+        out = universal_icon.path,
     )
 
     ctx.actions.run_shell(
-        outputs = [universal_icon], 
-        command = cmd, 
+        outputs = [universal_icon],
+        command = cmd,
         inputs = app_icon.files,
         mnemonic = "GenerateIcon",
         use_default_shell_env = True,
     )
 
     return [universal_icon, contents_json]
-
-
-
