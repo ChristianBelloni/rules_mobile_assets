@@ -3,8 +3,36 @@ load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 package(default_visibility = ["//visibility:public"])
 
 stardoc(
-    name = "docs",
-    out = "docs.md",
+    name = "common",
+    out = "common.md",
     input = "defs.bzl",
+    deps = ["//mobile_assets/private"],
+)
+
+stardoc(
+    name = "ios",
+    out = "ios.md",
+    input = "ios.bzl",
+    deps = ["//mobile_assets/private"],
+)
+
+stardoc(
+    name = "macos",
+    out = "macos.md",
+    input = "macos.bzl",
+    deps = ["//mobile_assets/private"],
+)
+
+stardoc(
+    name = "android",
+    out = "android.md",
+    input = "android.bzl",
+    deps = ["//mobile_assets/private"],
+)
+
+stardoc(
+    name = "apple",
+    out = "apple.md",
+    input = "apple.bzl",
     deps = ["//mobile_assets/private"],
 )

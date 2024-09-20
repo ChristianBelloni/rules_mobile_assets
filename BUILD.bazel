@@ -1,1 +1,9 @@
-
+filegroup(
+    name = "docs",
+    srcs = [
+        "//mobile_assets:android",
+        "//mobile_assets:apple",
+        "//mobile_assets:common",
+        "//mobile_assets:ios",
+    ],
+)
