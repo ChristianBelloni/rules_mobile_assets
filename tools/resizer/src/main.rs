@@ -5,6 +5,7 @@ use std::{
 };
 
 use clap::Parser;
+use resvg::tiny_skia::PremultipliedColorU8;
 use webp::{Encoder, PixelLayout};
 
 fn main() {
@@ -21,11 +22,16 @@ fn main() {
 
     let transform_x = args.size as f32 / current_size.width();
     let transform_y = args.size as f32 / current_size.height();
+
     resvg::render(
         &svg,
         resvg::tiny_skia::Transform::from_scale(transform_x, transform_y),
         &mut pixmap.as_mut(),
     );
+
+    pixmap.pixels_mut().iter_mut().for_each(|pix| {
+        *pix = PremultipliedColorU8::from_rgba(pix.red(), pix.green(), pix.blue(), 255).unwrap()
+    });
 
     if args.webp {
         let encoder = Encoder::new(

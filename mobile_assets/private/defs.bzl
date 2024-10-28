@@ -3,7 +3,6 @@ load(":providers.bzl", "ColorProvider", "ColorResourceProvider", "ImageResourceP
 def _shared_assets_impl(ctx):
     return SharedAssetProvider(
         app_icon = ctx.attr.app_icon,
-        # icons = ctx.attr.icons,
         images = ctx.attr.images,
         strings = ctx.attr.strings,
         colors = ctx.attr.colors,
@@ -15,8 +14,8 @@ shared_assets = rule(
     attrs = {
         "app_icon": attr.label(allow_single_file = True, mandatory = True),
         "images": attr.label_list(allow_files = True, providers = [ImageResourceProvider]),
-        "strings": attr.label(),
-        "colors": attr.label_list(),
+        "strings": attr.label(providers = [LocalizationProvider]),
+        "colors": attr.label_list(providers = [ColorResourceProvider]),
         "others": attr.label_list(allow_files = True),
     },
 )

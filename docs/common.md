@@ -48,6 +48,26 @@ color_resource(<a href="#color_resource-name">name</a>, <a href="#color_resource
 | <a id="color_resource-dark_theme"></a>dark_theme |  -   | <a href="https://bazel.build/concepts/labels">Label</a> | optional |  `None`  |
 
 
+<a id="define_colors"></a>
+
+## define_colors
+
+<pre>
+load("@rules_mobile_assets//mobile_assets:defs.bzl", "define_colors")
+
+define_colors(<a href="#define_colors-name">name</a>)
+</pre>
+
+
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="define_colors-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+
+
 <a id="image_resource"></a>
 
 ## image_resource
