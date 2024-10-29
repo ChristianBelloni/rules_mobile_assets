@@ -30,7 +30,9 @@ fn main() {
     );
 
     pixmap.pixels_mut().iter_mut().for_each(|pix| {
-        *pix = PremultipliedColorU8::from_rgba(pix.red(), pix.green(), pix.blue(), 255).unwrap()
+        if !pix.is_opaque() {
+            *pix = PremultipliedColorU8::from_rgba(255, 255, 255, 255).unwrap()
+        }
     });
 
     if args.webp {
