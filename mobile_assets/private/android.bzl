@@ -148,7 +148,7 @@ def _acc_lang(ctx, strings, common_directory, lang, is_base_language = False):
     else:
         out_files = [ctx.actions.declare_file("{}/values-{}/lang.xml".format(common_directory, lang))]
 
-    format = """"<?xml version="1.0" encoding="utf-8"?>\n<resources>\n"""
+    format = """<?xml version="1.0" encoding="utf-8"?>\n<resources>\n"""
 
     for vals in strings.localizations:
         vals = vals[LocalizationResourceProvider]
