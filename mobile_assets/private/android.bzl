@@ -148,12 +148,13 @@ def _acc_lang(ctx, strings, common_directory, lang, is_base_language = False):
     else:
         out_files = [ctx.actions.declare_file("{}/values-{}/lang.xml".format(common_directory, lang))]
 
-    format = ""
+    format = "<resources>\n"
     for vals in strings.localizations:
         vals = vals[LocalizationResourceProvider]
         val = vals.values[lang]
         key = vals.key
         format += write_entry(key, val)
+    format += "\n</resources>"
     for out_file in out_files:
         ctx.actions.write(output = out_file, content = format)
 
