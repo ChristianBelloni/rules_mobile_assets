@@ -162,7 +162,7 @@ def _acc_lang(ctx, strings, common_directory, lang, is_base_language = False):
     return out_files
 
 def write_entry(key, val):
-    val = val.replace("&", "\&amp;").replace("<", "\&lt;").replace(">", "\&gt;").replace("\"", "\&quot;").replace("'", "\&apos;")
+    val = val.replace("&", "\\&amp;").replace("<", "\\&lt;").replace(">", "\\&gt;").replace("\"", "\\&quot;").replace("'", "\\&apos;")
     return "<string name=\"{}\">{}</string>\n".format(key, val)
 
 android_assets = rule(
