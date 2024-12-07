@@ -156,6 +156,7 @@ def _acc_lang(ctx, strings, common_directory, lang, is_base_language = False):
         key = vals.key
         format += write_entry(key, val)
     format += "\n</resources>"
+    format = format.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&apos;")
     for out_file in out_files:
         ctx.actions.write(output = out_file, content = format)
 
