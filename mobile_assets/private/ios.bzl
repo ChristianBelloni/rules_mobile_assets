@@ -31,6 +31,7 @@ ios_assets = rule(
         "_apple_image_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_image_template.tpl", allow_single_file = True),
         "_apple_color_template": attr.label(default = "@rules_mobile_assets//mobile_assets/private/templates:apple_color_template.tpl", allow_single_file = True),
     } | COMMON_ATTRS,
+    output_to_genfiles=True
 )
 
 EMPTY_CONTENTS = """
