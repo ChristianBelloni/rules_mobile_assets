@@ -1,5 +1,4 @@
 load("@rules_rust//rust:defs.bzl", "rust_binary")
-load("//3rdparty/crates:defs.bzl", "all_crate_deps")
 
 exports_files(srcs = [
     "Cargo.lock",
@@ -8,9 +7,13 @@ exports_files(srcs = [
 
 #
 rust_binary(
-    name = "resizer",
-    srcs = glob(["**/*.rs"]),
-    edition = "2021",
-    visibility = ["//visibility:public"],
-    deps = all_crate_deps(),
+  name = "resizer",
+  srcs = glob(["**/*.rs"]),
+  edition = "2021",
+  visibility = ["//visibility:public"],
+  deps = [
+    "//3rdparty/crates:clap",
+    "//3rdparty/crates:image-webp",
+    "//3rdparty/crates:resvg",
+  ],
 )

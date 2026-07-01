@@ -32,19 +32,37 @@ filegroup(
 
 # Workspace Member Dependencies
 alias(
+    name = "clap-4.5.17",
+    actual = "@id__clap-4.5.17//:clap",
+    tags = ["manual"],
+)
+
+alias(
     name = "clap",
     actual = "@id__clap-4.5.17//:clap",
     tags = ["manual"],
 )
 
 alias(
-    name = "resvg",
+    name = "image-webp-0.2.4",
+    actual = "@id__image-webp-0.2.4//:image_webp",
+    tags = ["manual"],
+)
+
+alias(
+    name = "image-webp",
+    actual = "@id__image-webp-0.2.4//:image_webp",
+    tags = ["manual"],
+)
+
+alias(
+    name = "resvg-0.43.0",
     actual = "@id__resvg-0.43.0//:resvg",
     tags = ["manual"],
 )
 
 alias(
-    name = "webp",
-    actual = "@id__webp-0.3.0//:webp",
+    name = "resvg",
+    actual = "@id__resvg-0.43.0//:resvg",
     tags = ["manual"],
 )
