@@ -169,4 +169,5 @@ android_assets = rule(
     doc = "Extracts the necessary metadata from shared_assets and produces the required directory structure for android_{binary, library} resource_files",
     implementation = _android_assets_impl,
     attrs = COMMON_ATTRS,
+    output_to_genfiles=True
 )

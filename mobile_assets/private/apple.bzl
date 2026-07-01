@@ -244,4 +244,5 @@ additional_plist = rule(
     attrs = {
         "resources": attr.label(mandatory = True, providers = [SharedAssetProvider]),
     },
+    output_to_genfiles=True
 )
