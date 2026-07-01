@@ -1,12 +1,12 @@
 use std::{
     fs::File,
-    io::{BufWriter, Read, Write},
+    io::{BufWriter, Write},
     path::PathBuf,
 };
 
 use clap::Parser;
+use image_webp::WebPEncoder;
 use resvg::tiny_skia::PremultipliedColorU8;
-use webp::{Encoder, PixelLayout};
 
 fn main() {
     let args = Args::parse();
@@ -36,16 +36,17 @@ fn main() {
     });
 
     if args.webp {
-        let encoder = Encoder::new(
-            pixmap.data(),
-            PixelLayout::Rgba,
-            pixmap.width(),
-            pixmap.height(),
-        );
-        let image = encoder.encode(100.0);
         let out = File::create(&args.out).unwrap();
         let mut out = BufWriter::new(out);
-        out.write_all(&image).unwrap();
+        let encoder = WebPEncoder::new(&mut out);
+        encoder
+            .encode(
+                pixmap.data(),
+                pixmap.width(),
+                pixmap.height(),
+                image_webp::ColorType::Rgba8,
+            )
+            .unwrap();
         out.flush().unwrap();
     } else {
         pixmap.save_png(&args.out).unwrap();
